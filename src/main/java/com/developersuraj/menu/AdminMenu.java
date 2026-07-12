@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 public class AdminMenu {
 
+    //Admin Menu class is responsible for displaying the admin menu and handling user input.
+
     private final StudentService studentService;
     private final UserService userService;
     private final Scanner scanner;
@@ -25,7 +27,7 @@ public class AdminMenu {
 
         while (true) {
 
-            System.out.println("\n===== ADMIN MENU =====");
+            System.out.println("\n====== ADMIN MENU ======");
             System.out.println("1. Add Student");
             System.out.println("2. View Students");
             System.out.println("3. Search Student");
