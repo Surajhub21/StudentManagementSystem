@@ -9,7 +9,7 @@ import java.util.List;
 public class CSVUtil {
 
     public static void exportStudents(List<Student> students, String fileName) {
-        String location = "D:\\All Programme File\\Others\\CG_Heritage_Java\\StudentManagementSys\\src\\main\\java\\com\\developersuraj\\files\\"+fileName;
+        String location = "D:\\All Programme File\\Java Programing\\StudentManagementSys\\src\\main\\java\\com\\developersuraj\\files\\"+fileName;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(location))) {
 
             writer.write("StudentId,Name,Age,Course");
@@ -36,7 +36,7 @@ public class CSVUtil {
 
     public static List<Student> importStudents(String fileName) {
 
-        String location = "D:\\All Programme File\\Others\\CG_Heritage_Java\\StudentManagementSys\\src\\main\\java\\com\\developersuraj\\files\\"+fileName;
+        String location = "D:\\All Programme File\\Java Programing\\StudentManagementSys\\src\\main\\java\\com\\developersuraj\\files\\"+fileName;
 
         List<Student> students = new ArrayList<>();
 

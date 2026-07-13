@@ -48,9 +48,9 @@ public class StudentService {
 
         Validator.validateStudent(student);
 
-        studentDAO.addStudent(student);
+        Student addedStudent = studentDAO.addStudent(student);
 
-        System.out.println("Student added successfully.");
+        System.out.println("Student added successfully. : "+ addedStudent);
     }
 
     public void viewAllStudents() {

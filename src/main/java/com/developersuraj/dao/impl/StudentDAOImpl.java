@@ -4,6 +4,7 @@ package com.developersuraj.dao.impl;
 import com.developersuraj.dao.StudentDAO;
 import com.developersuraj.database.DBConnection;
 import com.developersuraj.model.Student;
+import com.developersuraj.util.PasswordUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,31 +14,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAOImpl implements StudentDAO {
-    @Override
-    public void addStudent(Student student) {
 
-        String sql = """
-            INSERT INTO students(student_id,name,age,course)
-            VALUES(?,?,?,?)
+    @Override
+    public Student addStudent(Student student) {
+
+        String studentSql = """
+            INSERT INTO students(student_id, name, age, course)
+            VALUES (?, ?, ?, ?)
             """;
 
-        try (
-                Connection connection = DBConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
+        String userSql = """
+            INSERT INTO users(username, password, role, student_id)
+            VALUES (?, ?, ?, ?)
+            """;
 
-            statement.setInt(1, student.getStudentId());
-            statement.setString(2, student.getName());
-            statement.setInt(3, student.getAge());
-            statement.setString(4, student.getCourse());
+        try (Connection connection = DBConnection.getConnection()) {
 
-            statement.executeUpdate();
+            connection.setAutoCommit(false);
+
+            try (
+                    PreparedStatement studentStmt = connection.prepareStatement(studentSql);
+                    PreparedStatement userStmt = connection.prepareStatement(userSql)
+            ) {
+
+                // Insert into students table
+                studentStmt.setInt(1, student.getStudentId());
+                studentStmt.setString(2, student.getName());
+                studentStmt.setInt(3, student.getAge());
+                studentStmt.setString(4, student.getCourse());
+                studentStmt.executeUpdate();
+
+                // Extract first name as username
+                String username = student.getName().trim().split("\\s+")[0];
+
+                // Insert into users table
+                userStmt.setString(1, username);
+                userStmt.setString(2, PasswordUtil.hashPassword("123"));
+                userStmt.setString(3, "STUDENT");
+                userStmt.setInt(4, student.getStudentId());
+                userStmt.executeUpdate();
+
+                connection.commit();
+                return student;
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException("Unable to add student.", e);
         }
-
     }
+
     @Override
     public List<Student> getAllStudents() {
 
